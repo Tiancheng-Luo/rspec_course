@@ -3,7 +3,7 @@ class Card
     def initialize(rank, suit)
         @rank=rank
         @suit=suit
-        puts rank,suit
+        puts @rank,@suit,"\n"
     end
     #def type
         #@type
@@ -25,5 +25,11 @@ RSpec.describe Card do
 
     it 'has a suit' do # `specify` same as `it`
         expect(card.suit).to eq('Spades')
+    end
+
+    it 'has custom error message' do
+        card.suit = 'Nonsense'
+        comparison = 'Spades'
+        expect(card.suit).to eq(comparison), "Hey I expected #{comparison}, yet I got #{card.suit}."
     end
 end
