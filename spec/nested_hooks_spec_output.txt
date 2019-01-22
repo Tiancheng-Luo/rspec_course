@@ -1,0 +1,16 @@
+Outer Before context
+Inner Before context
+Outer Before example
+Inner Before example
+example 1
+Outer After example
+.Outer Before example
+Inner Before example
+example 2
+Outer After example
+.Outer After context
+
+
+Finished in 0.01199 seconds (files took 0.40575 seconds to load)
+2 examples, 0 failures
+
