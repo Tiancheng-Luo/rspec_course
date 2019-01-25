@@ -13,5 +13,6 @@ RSpec.describe King do
 
     it 'response a great person' do
         expect(subject.name).to eq('Boris')
+        expect(louis.name). to eq('louis')
     end
 end
