@@ -16,6 +16,11 @@ RSpec.describe 'before and after hooks' do
         puts 'Outer After example'
     end
 
+    it 'is just random' do
+        expect(1+1).to eq(2)
+        puts 'example 0'
+    end
+
     context 'with nested condition A' do
 
         before(:context) do

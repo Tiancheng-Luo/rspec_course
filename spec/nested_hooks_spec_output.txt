@@ -1,5 +1,8 @@
 Outer Before context
-Inner Before context
+Outer Before example
+example 0
+Outer After example
+.Inner Before context
 Outer Before example
 Inner Before example
 example 1
@@ -11,6 +14,6 @@ Outer After example
 .Outer After context
 
 
-Finished in 0.01199 seconds (files took 0.40575 seconds to load)
-2 examples, 0 failures
+Finished in 0.01299 seconds (files took 0.37977 seconds to load)
+3 examples, 0 failures
 
