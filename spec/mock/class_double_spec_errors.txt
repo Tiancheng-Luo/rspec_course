@@ -1,0 +1,16 @@
+F
+
+Failures:
+
+  1) CardGame can only implement class methods that are defined on a class
+     Failure/Error: class_double(Deck, build: ['Ace', 'Queen'], shuffle: ['Queen', 'Ace'])
+       the Deck class does not implement the class method: shuffle
+     # ./class_double_spec.rb:16:in `block (2 levels) in <top (required)>'
+
+Finished in 0.01099 seconds (files took 0.43573 seconds to load)
+1 example, 1 failure
+
+Failed examples:
+
+rspec ./class_double_spec.rb:15 # CardGame can only implement class methods that are defined on a class
+

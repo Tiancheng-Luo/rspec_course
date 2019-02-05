@@ -1,0 +1,16 @@
+.F
+
+Failures:
+
+  1) Person instance_double should implement only defined method
+     Failure/Error: person = instance_double(Person, a: "Hello", b:20)
+       the Person class does not implement the instance method: b
+     # ./instance_doubles_spec.rb:19:in `block (3 levels) in <top (required)>'
+
+Finished in 0.01399 seconds (files took 0.45172 seconds to load)
+2 examples, 1 failure
+
+Failed examples:
+
+rspec ./instance_doubles_spec.rb:17 # Person instance_double should implement only defined method
+

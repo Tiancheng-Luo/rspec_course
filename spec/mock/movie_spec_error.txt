@@ -1,0 +1,19 @@
+F
+
+Failures:
+
+  1) Movie start_shooting method expects an actor to do 3 acts
+     Failure/Error: expect(stuntman).to receive(:ready?)
+
+       (Double "Mr. Danger").ready?(*(any args))
+           expected: 1 time with any arguments
+           received: 0 times with any arguments
+     # ./movie_spec.rb:52:in `block (3 levels) in <top (required)>'
+
+Finished in 0.03498 seconds (files took 0.42574 seconds to load)
+1 example, 1 failure
+
+Failed examples:
+
+rspec ./movie_spec.rb:51 # Movie start_shooting method expects an actor to do 3 acts
+
