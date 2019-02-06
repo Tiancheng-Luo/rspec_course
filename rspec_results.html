@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <title>RSpec results</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Expires" content="-1" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <style type="text/css">
+  body {
+    margin: 0;
+    padding: 0;
+    background: #fff;
+    font-size: 80%;
+  }
+  </style>
+  <script type="text/javascript">
+    // <![CDATA[
+
+function addClass(element_id, classname) {
+  document.getElementById(element_id).className += (" " + classname);
+}
+
+function removeClass(element_id, classname) {
+  var elem = document.getElementById(element_id);
+  var classlist = elem.className.replace(classname,'');
+  elem.className = classlist;
+}
+
+function moveProgressBar(percentDone) {
+  document.getElementById("rspec-header").style.width = percentDone +"%";
+}
+
+function makeRed(element_id) {
+  removeClass(element_id, 'passed');
+  removeClass(element_id, 'not_implemented');
+  addClass(element_id,'failed');
+}
+
+function makeYellow(element_id) {
+  var elem = document.getElementById(element_id);
+  if (elem.className.indexOf("failed") == -1) {  // class doesn't includes failed
+    if (elem.className.indexOf("not_implemented") == -1) { // class doesn't include not_implemented
+      removeClass(element_id, 'passed');
+      addClass(element_id,'not_implemented');
+    }
+  }
+}
+
+function apply_filters() {
+  var passed_filter = document.getElementById('passed_checkbox').checked;
+  var failed_filter = document.getElementById('failed_checkbox').checked;
+  var pending_filter = document.getElementById('pending_checkbox').checked;
+
+  assign_display_style("example passed", passed_filter);
+  assign_display_style("example failed", failed_filter);
+  assign_display_style("example not_implemented", pending_filter);
+
+  assign_display_style_for_group("example_group passed", passed_filter);
+  assign_display_style_for_group("example_group not_implemented", pending_filter, pending_filter || passed_filter);
+  assign_display_style_for_group("example_group failed", failed_filter, failed_filter || pending_filter || passed_filter);
+}
+
+function get_display_style(display_flag) {
+  var style_mode = 'none';
+  if (display_flag == true) {
+    style_mode = 'block';
+  }
+  return style_mode;
+}
+
+function assign_display_style(classname, display_flag) {
+  var style_mode = get_display_style(display_flag);
+  var elems = document.getElementsByClassName(classname)
+  for (var i=0; i<elems.length;i++) {
+    elems[i].style.display = style_mode;
+  }
+}
+
+function assign_display_style_for_group(classname, display_flag, subgroup_flag) {
+  var display_style_mode = get_display_style(display_flag);
+  var subgroup_style_mode = get_display_style(subgroup_flag);
+  var elems = document.getElementsByClassName(classname)
+  for (var i=0; i<elems.length;i++) {
+    var style_mode = display_style_mode;
+    if ((display_flag != subgroup_flag) && (elems[i].getElementsByTagName('dt')[0].innerHTML.indexOf(", ") != -1)) {
+      elems[i].style.display = subgroup_style_mode;
+    } else {
+      elems[i].style.display = display_style_mode;
+    }
+  }
+}
+
+    // ]]>
+  </script>
+  <style type="text/css">
+#rspec-header {
+  background: #65C400; color: #fff; height: 4em;
+}
+
+.rspec-report h1 {
+  margin: 0px 10px 0px 10px;
+  padding: 10px;
+  font-family: "Lucida Grande", Helvetica, sans-serif;
+  font-size: 1.8em;
+  position: absolute;
+}
+
+#label {
+  float:left;
+}
+
+#display-filters {
+  float:left;
+  padding: 28px 0 0 40%;
+  font-family: "Lucida Grande", Helvetica, sans-serif;
+}
+
+#summary {
+  float:right;
+  padding: 5px 10px;
+  font-family: "Lucida Grande", Helvetica, sans-serif;
+  text-align: right;
+}
+
+#summary p {
+  margin: 0 0 0 2px;
+}
+
+#summary #totals {
+  font-size: 1.2em;
+}
+
+.example_group {
+  margin: 0 10px 5px;
+  background: #fff;
+}
+
+dl {
+  margin: 0; padding: 0 0 5px;
+  font: normal 11px "Lucida Grande", Helvetica, sans-serif;
+}
+
+dt {
+  padding: 3px;
+  background: #65C400;
+  color: #fff;
+  font-weight: bold;
+}
+
+dd {
+  margin: 5px 0 5px 5px;
+  padding: 3px 3px 3px 18px;
+}
+
+dd .duration {
+  padding-left: 5px;
+  text-align: right;
+  right: 0px;
+  float:right;
+}
+
+dd.example.passed {
+  border-left: 5px solid #65C400;
+  border-bottom: 1px solid #65C400;
+  background: #DBFFB4; color: #3D7700;
+}
+
+dd.example.not_implemented {
+  border-left: 5px solid #FAF834;
+  border-bottom: 1px solid #FAF834;
+  background: #FCFB98; color: #131313;
+}
+
+dd.example.pending_fixed {
+  border-left: 5px solid #0000C2;
+  border-bottom: 1px solid #0000C2;
+  color: #0000C2; background: #D3FBFF;
+}
+
+dd.example.failed {
+  border-left: 5px solid #C20000;
+  border-bottom: 1px solid #C20000;
+  color: #C20000; background: #FFFBD3;
+}
+
+
+dt.not_implemented {
+  color: #000000; background: #FAF834;
+}
+
+dt.pending_fixed {
+  color: #FFFFFF; background: #C40D0D;
+}
+
+dt.failed {
+  color: #FFFFFF; background: #C40D0D;
+}
+
+
+#rspec-header.not_implemented {
+  color: #000000; background: #FAF834;
+}
+
+#rspec-header.pending_fixed {
+  color: #FFFFFF; background: #C40D0D;
+}
+
+#rspec-header.failed {
+  color: #FFFFFF; background: #C40D0D;
+}
+
+
+.backtrace {
+  color: #000;
+  font-size: 12px;
+}
+
+a {
+  color: #BE5C00;
+}
+
+/* Ruby code, style similar to vibrant ink */
+.ruby {
+  font-size: 12px;
+  font-family: monospace;
+  color: white;
+  background-color: black;
+  padding: 0.1em 0 0.2em 0;
+}
+
+.ruby .keyword { color: #FF6600; }
+.ruby .constant { color: #339999; }
+.ruby .attribute { color: white; }
+.ruby .global { color: white; }
+.ruby .module { color: white; }
+.ruby .class { color: white; }
+.ruby .string { color: #66FF00; }
+.ruby .ident { color: white; }
+.ruby .method { color: #FFCC00; }
+.ruby .number { color: white; }
+.ruby .char { color: white; }
+.ruby .comment { color: #9933CC; }
+.ruby .symbol { color: white; }
+.ruby .regex { color: #44B4CC; }
+.ruby .punct { color: white; }
+.ruby .escape { color: white; }
+.ruby .interp { color: white; }
+.ruby .expr { color: white; }
+
+.ruby .offending { background-color: gray; }
+.ruby .linenum {
+  width: 75px;
+  padding: 0.1em 1em 0.2em 0;
+  color: #000000;
+  background-color: #FFFBD3;
+}
+
+  </style>
+</head>
+<body>
+<div class="rspec-report">
+
+<div id="rspec-header">
+  <div id="label">
+    <h1>RSpec Code Examples</h1>
+  </div>
+
+  <div id="display-filters">
+    <input id="passed_checkbox"  name="passed_checkbox"  type="checkbox" checked="checked" onchange="apply_filters()" value="1" /> <label for="passed_checkbox">Passed</label>
+    <input id="failed_checkbox"  name="failed_checkbox"  type="checkbox" checked="checked" onchange="apply_filters()" value="2" /> <label for="failed_checkbox">Failed</label>
+    <input id="pending_checkbox" name="pending_checkbox" type="checkbox" checked="checked" onchange="apply_filters()" value="3" /> <label for="pending_checkbox">Pending</label>
+  </div>
+
+  <div id="summary">
+    <p id="totals">&#160;</p>
+    <p id="duration">&#160;</p>
+  </div>
+</div>
+
+
+<div class="results">
+<div id="div_group_1" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_1" class="passed">all matcher</dt>
+    <script type="text/javascript">moveProgressBar('1.0');</script>
+    <dd class="example passed"><span class="passed_spec_name">allows for ruby traditional aggregate checks</span><span class='duration'>0.04397s</span></dd>
+    <script type="text/javascript">moveProgressBar('2.1');</script>
+    <dd class="example passed"><span class="passed_spec_name">allows for aggregate checks</span><span class='duration'>0.00500s</span></dd>
+  </dl>
+</div>
+<div id="div_group_2" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_2" class="passed">[5, 7, 9]</dt>
+    <script type="text/javascript">moveProgressBar('3.2');</script>
+    <dd class="example passed"><span class="passed_spec_name">should all be odd</span><span class='duration'>0.00000s</span></dd>
+    <script type="text/javascript">moveProgressBar('4.3');</script>
+    <dd class="example passed"><span class="passed_spec_name">should all be &lt; 10</span><span class='duration'>0.00000s</span></dd>
+  </dl>
+</div>
+<div id="div_group_3" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_3" class="passed">be matchers</dt>
+    <script type="text/javascript">moveProgressBar('5.4');</script>
+    <dd class="example passed"><span class="passed_spec_name">can test for truthiness</span><span class='duration'>0.00000s</span></dd>
+    <script type="text/javascript">moveProgressBar('6.5');</script>
+    <dd class="example passed"><span class="passed_spec_name">can test for falsiness</span><span class='duration'>0.00000s</span></dd>
+    <script type="text/javascript">moveProgressBar('7.6');</script>
+    <dd class="example passed"><span class="passed_spec_name">can test for nil</span><span class='duration'>0.00000s</span></dd>
+    <script type="text/javascript">moveProgressBar('8.7');</script>
+    <dd class="example passed"><span class="passed_spec_name">can test for `be` </span><span class='duration'>0.00000s</span></dd>
+  </dl>
+</div>
+<div id="div_group_4" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_4" class="passed">Card</dt>
+    <script type="text/javascript">moveProgressBar('9.8');</script>
+    <dd class="example passed"><span class="passed_spec_name">has a rank and that rank can change</span><span class='duration'>0.00300s</span></dd>
+    <script type="text/javascript">moveProgressBar('10.9');</script>
+    <dd class="example passed"><span class="passed_spec_name">has a suit</span><span class='duration'>0.00100s</span></dd>
+    <script type="text/javascript">makeRed('rspec-header');</script>
+    <script type="text/javascript">makeRed('div_group_4');</script>
+    <script type="text/javascript">makeRed('example_group_4');</script>
+    <script type="text/javascript">moveProgressBar('12.0');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">has custom error message</span>
+      <span class="duration">3.50080s</span>
+      <div class="failure" id="failure_1">
+        <div class="message"><pre>  Failure/Error: expect(card.suit).to eq(comparison), &quot;Hey I expected #{comparison}, yet I got #{card.suit}.&quot;
+    Hey I expected Spades, yet I got Nonsense.
+  # ./spec/card_spec.rb:33:in `block (2 levels) in &lt;top (required)&gt;&#39;</pre></div>
+        <div class="backtrace"><pre>./spec/card_spec.rb:33:in `block (2 levels) in &lt;top (required)&gt;&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">31</span>        card.suit = <span class="string"><span class="delimiter">'</span><span class="content">Nonsense</span><span class="delimiter">'</span></span>
+<span class="linenum">32</span>        comparison = <span class="string"><span class="delimiter">'</span><span class="content">Spades</span><span class="delimiter">'</span></span>
+<span class="offending"><span class="linenum">33</span>        <span class="keyword">expect</span>(card.suit).to eq(comparison), <span class="string"><span class="delimiter">&quot;</span><span class="content">Hey I expected </span><span class="inline"><span class="inline-delimiter">#{</span>comparison<span class="inline-delimiter">}</span></span><span class="content">, yet I got </span><span class="inline"><span class="inline-delimiter">#{</span>card.suit<span class="inline-delimiter">}</span></span><span class="content">.</span><span class="delimiter">&quot;</span></span></span>
+<span class="linenum">34</span>    <span class="keyword">end</span>
+<span class="linenum">35</span><span class="keyword">end</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_5" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_5" class="passed">change matcher</dt>
+    <script type="text/javascript">moveProgressBar('13.1');</script>
+    <dd class="example passed"><span class="passed_spec_name">check that a method changes object state with `from().to()`</span><span class='duration'>0.09794s</span></dd>
+    <script type="text/javascript">moveProgressBar('14.2');</script>
+    <dd class="example passed"><span class="passed_spec_name">check by using `by`</span><span class='duration'>0.00000s</span></dd>
+  </dl>
+</div>
+<div id="div_group_6" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_6" class="passed">comparison matchers</dt>
+    <script type="text/javascript">moveProgressBar('15.3');</script>
+    <dd class="example passed"><span class="passed_spec_name">allows for comparison with built-in Ruby operations</span><span class='duration'>0.00000s</span></dd>
+  </dl>
+</div>
+<div id="div_group_7" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_7" class="passed">100</dt>
+    <script type="text/javascript">moveProgressBar('16.4');</script>
+    <dd class="example passed"><span class="passed_spec_name">should be &gt; 90</span><span class='duration'>0.00000s</span></dd>
+    <script type="text/javascript">moveProgressBar('17.5');</script>
+    <dd class="example passed"><span class="passed_spec_name">should be &gt;= 100</span><span class='duration'>0.00000s</span></dd>
+    <script type="text/javascript">moveProgressBar('18.6');</script>
+    <dd class="example passed"><span class="passed_spec_name">should be &lt; 500</span><span class='duration'>0.00000s</span></dd>
+    <script type="text/javascript">moveProgressBar('19.7');</script>
+    <dd class="example passed"><span class="passed_spec_name">should be &lt;= 100</span><span class='duration'>0.00000s</span></dd>
+    <script type="text/javascript">moveProgressBar('20.8');</script>
+    <dd class="example passed"><span class="passed_spec_name">should not be &gt; 105</span><span class='duration'>0.00000s</span></dd>
+  </dl>
+</div>
+<div id="div_group_8" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_8" class="passed">25</dt>
+    <script type="text/javascript">moveProgressBar('21.9');</script>
+    <dd class="example passed"><span class="passed_spec_name">can test for multiple matchers</span><span class='duration'>0.00000s</span></dd>
+    <script type="text/javascript">moveProgressBar('23.0');</script>
+    <dd class="example passed"><span class="passed_spec_name">should be odd and be &gt; 20 and be &lt; 35</span><span class='duration'>0.00000s</span></dd>
+  </dl>
+</div>
+<div id="div_group_9" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_9" class="passed">caterpillar</dt>
+    <script type="text/javascript">moveProgressBar('24.1');</script>
+    <dd class="example passed"><span class="passed_spec_name">should start with &quot;cat&quot; and end with &quot;pillar&quot;</span><span class='duration'>0.00200s</span></dd>
+  </dl>
+</div>
+<div id="div_group_10" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_10" class="passed">[:usa, :canada, :mexico]</dt>
+    <script type="text/javascript">moveProgressBar('25.2');</script>
+    <dd class="example passed"><span class="passed_spec_name">can check for multiple possibilities</span><span class='duration'>0.00000s</span></dd>
+  </dl>
+</div>
+<div id="div_group_11" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_11" class="passed">contain_exactly matcher</dt>
+  </dl>
+</div>
+<div id="div_group_12" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_12" class="passed">long form syntax</dt>
+    <script type="text/javascript">moveProgressBar('26.3');</script>
+    <dd class="example passed"><span class="passed_spec_name">should check for the presence of all elements</span><span class='duration'>0.00300s</span></dd>
+    <script type="text/javascript">moveProgressBar('27.4');</script>
+    <dd class="example passed"><span class="passed_spec_name">should contain exactly 1, 5, and 3</span><span class='duration'>0.00000s</span></dd>
+  </dl>
+</div>
+<div id="div_group_13" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_13" class="passed">#even? method</dt>
+  </dl>
+</div>
+<div id="div_group_14" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_14" class="passed">with even number</dt>
+    <script type="text/javascript">moveProgressBar('28.5');</script>
+    <dd class="example passed"><span class="passed_spec_name">should return true</span><span class='duration'>0.00000s</span></dd>
+  </dl>
+</div>
+<div id="div_group_15" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_15" class="passed">with odd number</dt>
+    <script type="text/javascript">moveProgressBar('29.6');</script>
+    <dd class="example passed"><span class="passed_spec_name">should return false</span><span class='duration'>0.00000s</span></dd>
+  </dl>
+</div>
+<div id="div_group_16" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_16" class="passed">King</dt>
+    <script type="text/javascript">makeRed('div_group_16');</script>
+    <script type="text/javascript">makeRed('example_group_16');</script>
+    <script type="text/javascript">moveProgressBar('30.7');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">response a great person</span>
+      <span class="duration">0.00000s</span>
+      <div class="failure" id="failure_2">
+        <div class="message"><pre>  Failure/Error: expect(louis.name). to eq(&#39;louis&#39;)
+
+    expected: &quot;louis&quot;
+         got: &quot;Louis&quot;
+
+    (compared using ==)
+  # ./spec/described_class_spec.rb:16:in `block (2 levels) in &lt;top (required)&gt;&#39;</pre></div>
+        <div class="backtrace"><pre>./spec/described_class_spec.rb:16:in `block (2 levels) in &lt;top (required)&gt;&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">14</span>    <span class="keyword">it</span> <span class="string"><span class="delimiter">'</span><span class="content">response a great person</span><span class="delimiter">'</span></span> <span class="keyword">do</span>
+<span class="linenum">15</span>        <span class="keyword">expect</span>(<span class="keyword">subject</span>.name).to eq(<span class="string"><span class="delimiter">'</span><span class="content">Boris</span><span class="delimiter">'</span></span>)
+<span class="offending"><span class="linenum">16</span>        <span class="keyword">expect</span>(louis.name). to eq(<span class="string"><span class="delimiter">'</span><span class="content">louis</span><span class="delimiter">'</span></span>)</span>
+<span class="linenum">17</span>    <span class="keyword">end</span>
+<span class="linenum">18</span><span class="keyword">end</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_17" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_17" class="passed">equality matchers</dt>
+  </dl>
+</div>
+<div id="div_group_18" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_18" class="passed">eq matcher or `be==`</dt>
+    <script type="text/javascript">moveProgressBar('31.8');</script>
+    <dd class="example passed"><span class="passed_spec_name">tests for value and ignore type</span><span class='duration'>0.00000s</span></dd>
+  </dl>
+</div>
+<div id="div_group_19" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_19" class="passed">eq matcher</dt>
+    <script type="text/javascript">moveProgressBar('32.9');</script>
+    <dd class="example passed"><span class="passed_spec_name">tests for value, including same type</span><span class='duration'>0.00200s</span></dd>
+  </dl>
+</div>
+<div id="div_group_20" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_20" class="passed">equal and be matcher</dt>
+    <script type="text/javascript">moveProgressBar('34.0');</script>
+    <dd class="example passed"><span class="passed_spec_name">tests for identity</span><span class='duration'>0.00000s</span></dd>
+  </dl>
+</div>
+<div id="div_group_21" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_21" class="passed">Hash</dt>
+    <script type="text/javascript">moveProgressBar('35.1');</script>
+    <dd class="example passed"><span class="passed_spec_name">has 2 key-value pairs</span><span class='duration'>0.00000s</span></dd>
+  </dl>
+</div>
+<div id="div_group_22" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_22" class="passed">nested example</dt>
+    <script type="text/javascript">moveProgressBar('36.2');</script>
+    <dd class="example passed"><span class="passed_spec_name">has 2 key-value pairs</span><span class='duration'>0.00000s</span></dd>
+  </dl>
+</div>
+<div id="div_group_23" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_23" class="passed">have_attributes matcher</dt>
+  </dl>
+</div>
+<div id="div_group_24" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_24" class="passed">#&lt;ProfessionalWrestler:0x0000000003a340f0&gt;</dt>
+    <script type="text/javascript">moveProgressBar('37.3');</script>
+    <dd class="example passed"><span class="passed_spec_name">checks for object attribute and proper values</span><span class='duration'>0.00600s</span></dd>
+    <script type="text/javascript">moveProgressBar('38.4');</script>
+    <dd class="example passed"><span class="passed_spec_name">should have attributes {:name =&gt; &quot;Austin&quot;}</span><span class='duration'>0.00000s</span></dd>
+    <script type="text/javascript">moveProgressBar('39.5');</script>
+    <dd class="example passed"><span class="passed_spec_name">should have attributes {:finishing_move =&gt; &quot;Stunner&quot;, :name =&gt; &quot;Austin&quot;}</span><span class='duration'>0.00000s</span></dd>
+  </dl>
+</div>
+<div id="div_group_25" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_25" class="passed">before and after hooks</dt>
+    <script type="text/javascript">moveProgressBar('40.6');</script>
+    <dd class="example passed"><span class="passed_spec_name">is just random</span><span class='duration'>0.00100s</span></dd>
+    <script type="text/javascript">moveProgressBar('41.7');</script>
+    <dd class="example passed"><span class="passed_spec_name">is just another random</span><span class='duration'>0.00100s</span></dd>
+  </dl>
+</div>
+<div id="div_group_26" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_26" class="passed">Hash</dt>
+    <script type="text/javascript">moveProgressBar('42.8');</script>
+    <dd class="example passed"><span class="passed_spec_name">should start off empty</span><span class='duration'>0.00100s</span></dd>
+    <script type="text/javascript">moveProgressBar('43.9');</script>
+    <dd class="example passed"><span class="passed_spec_name">is isolated between examples</span><span class='duration'>0.00000s</span></dd>
+  </dl>
+</div>
+<div id="div_group_27" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_27" class="passed">include matcher</dt>
+  </dl>
+</div>
+<div id="div_group_28" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_28" class="passed">hot chocolate</dt>
+    <script type="text/javascript">moveProgressBar('45.0');</script>
+    <dd class="example passed"><span class="passed_spec_name">should include &quot;hot&quot;</span><span class='duration'>0.00300s</span></dd>
+    <script type="text/javascript">moveProgressBar('46.1');</script>
+    <dd class="example passed"><span class="passed_spec_name">should include &quot;choc&quot;</span><span class='duration'>0.00000s</span></dd>
+    <script type="text/javascript">moveProgressBar('47.2');</script>
+    <dd class="example passed"><span class="passed_spec_name">should include &quot;late&quot;</span><span class='duration'>0.00000s</span></dd>
+  </dl>
+</div>
+<div id="div_group_29" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_29" class="passed">[10, 20, 30]</dt>
+    <script type="text/javascript">moveProgressBar('48.3');</script>
+    <dd class="example passed"><span class="passed_spec_name">should include 10</span><span class='duration'>0.00000s</span></dd>
+    <script type="text/javascript">moveProgressBar('49.4');</script>
+    <dd class="example passed"><span class="passed_spec_name">should include 30 and 20</span><span class='duration'>0.00000s</span></dd>
+  </dl>
+</div>
+<div id="div_group_30" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_30" class="passed">{:a=&gt;1, :b=&gt;3}</dt>
+    <script type="text/javascript">moveProgressBar('50.5');</script>
+    <dd class="example passed"><span class="passed_spec_name">should include :a</span><span class='duration'>0.00000s</span></dd>
+    <script type="text/javascript">moveProgressBar('51.6');</script>
+    <dd class="example passed"><span class="passed_spec_name">should include {:a =&gt; 1}</span><span class='duration'>0.00000s</span></dd>
+  </dl>
+</div>
+<div id="div_group_31" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_31" class="passed">allow method review</dt>
+    <script type="text/javascript">moveProgressBar('52.7');</script>
+    <dd class="example passed"><span class="passed_spec_name">can customize return value for methods on doubles</span><span class='duration'>0.02299s</span></dd>
+    <script type="text/javascript">moveProgressBar('53.8');</script>
+    <dd class="example passed"><span class="passed_spec_name">can stub one or more methods on a real object</span><span class='duration'>0.00000s</span></dd>
+    <script type="text/javascript">moveProgressBar('54.9');</script>
+    <dd class="example passed"><span class="passed_spec_name">can return multiple return values in sequence</span><span class='duration'>0.00100s</span></dd>
+  </dl>
+</div>
+<div id="div_group_32" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_32" class="passed">CardGame</dt>
+    <script type="text/javascript">moveProgressBar('56.0');</script>
+    <dd class="example passed"><span class="passed_spec_name">can only implement class methods that are defined on a class</span><span class='duration'>0.00300s</span></dd>
+  </dl>
+</div>
+<div id="div_group_33" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_33" class="passed">a random double</dt>
+    <script type="text/javascript">moveProgressBar('57.1');</script>
+    <dd class="example passed"><span class="passed_spec_name">only allows defined methods to be invoked</span><span class='duration'>0.00300s</span></dd>
+  </dl>
+</div>
+<div id="div_group_34" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_34" class="passed">Person</dt>
+  </dl>
+</div>
+<div id="div_group_35" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_35" class="passed">regular double</dt>
+    <script type="text/javascript">moveProgressBar('58.2');</script>
+    <dd class="example passed"><span class="passed_spec_name">can implement any method</span><span class='duration'>0.00000s</span></dd>
+  </dl>
+</div>
+<div id="div_group_36" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_36" class="passed">instance_double</dt>
+    <script type="text/javascript">moveProgressBar('59.3');</script>
+    <dd class="example passed"><span class="passed_spec_name">should implement only defined method</span><span class='duration'>0.00000s</span></dd>
+  </dl>
+</div>
+<div id="div_group_37" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_37" class="passed">matching arguments</dt>
+    <script type="text/javascript">moveProgressBar('60.4');</script>
+    <dd class="example passed"><span class="passed_spec_name">can return different values depending on the argument</span><span class='duration'>0.00000s</span></dd>
+  </dl>
+</div>
+<div id="div_group_38" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_38" class="passed">Movie</dt>
+  </dl>
+</div>
+<div id="div_group_39" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_39" class="passed">start_shooting method</dt>
+    <script type="text/javascript">moveProgressBar('61.5');</script>
+    <dd class="example passed"><span class="passed_spec_name">expects an actor to do 3 acts</span><span class='duration'>0.00100s</span></dd>
+  </dl>
+</div>
+<div id="div_group_40" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_40" class="passed">Garage</dt>
+    <script type="text/javascript">moveProgressBar('62.6');</script>
+    <dd class="example passed"><span class="passed_spec_name">adds a car to its storage</span><span class='duration'>0.00400s</span></dd>
+  </dl>
+</div>
+<div id="div_group_41" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_41" class="passed">spies</dt>
+    <script type="text/javascript">moveProgressBar('63.7');</script>
+    <dd class="example passed"><span class="passed_spec_name">confirms that a message has been received</span><span class='duration'>0.00100s</span></dd>
+    <script type="text/javascript">moveProgressBar('64.8');</script>
+    <dd class="example passed"><span class="passed_spec_name">resets between examples</span><span class='duration'>0.00000s</span></dd>
+    <script type="text/javascript">moveProgressBar('65.9');</script>
+    <dd class="example passed"><span class="passed_spec_name">retains the same functionality or a regular double</span><span class='duration'>0.00000s</span></dd>
+  </dl>
+</div>
+<div id="div_group_42" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_42" class="passed">before and after hooks</dt>
+    <script type="text/javascript">moveProgressBar('67.0');</script>
+    <dd class="example passed"><span class="passed_spec_name">is just random</span><span class='duration'>0.00300s</span></dd>
+  </dl>
+</div>
+<div id="div_group_43" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_43" class="passed">with nested condition A</dt>
+    <script type="text/javascript">moveProgressBar('68.1');</script>
+    <dd class="example passed"><span class="passed_spec_name">is just random</span><span class='duration'>0.00500s</span></dd>
+    <script type="text/javascript">moveProgressBar('69.2');</script>
+    <dd class="example passed"><span class="passed_spec_name">is just another random</span><span class='duration'>0.00600s</span></dd>
+  </dl>
+</div>
+<div id="div_group_44" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_44" class="passed">not_to_method</dt>
+    <script type="text/javascript">moveProgressBar('70.3');</script>
+    <dd class="example passed"><span class="passed_spec_name">checks that  2 values do not match</span><span class='duration'>0.00000s</span></dd>
+  </dl>
+</div>
+<div id="div_group_45" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_45" class="passed">not_to method</dt>
+    <script type="text/javascript">moveProgressBar('71.4');</script>
+    <dd class="example passed"><span class="passed_spec_name">checks for the inverse of a matcher</span><span class='duration'>0.00300s</span></dd>
+  </dl>
+</div>
+<div id="div_group_46" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_46" class="passed">shorthand syntax</dt>
+  </dl>
+</div>
+<div id="div_group_47" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_47" class="passed">with classic syntax</dt>
+    <script type="text/javascript">moveProgressBar('72.5');</script>
+    <dd class="example passed"><span class="passed_spec_name">should equal 5</span><span class='duration'>0.00000s</span></dd>
+  </dl>
+</div>
+<div id="div_group_48" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_48" class="passed">with one-liner syntax</dt>
+    <script type="text/javascript">moveProgressBar('73.6');</script>
+    <dd class="example passed"><span class="passed_spec_name">should eq 5</span><span class='duration'>0.00000s</span></dd>
+  </dl>
+</div>
+<div id="div_group_49" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_49" class="passed">PrLang</dt>
+    <script type="text/javascript">moveProgressBar('74.7');</script>
+    <dd class="example passed"><span class="passed_spec_name">should store the name of the language</span><span class='duration'>0.00000s</span></dd>
+  </dl>
+</div>
+<div id="div_group_50" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_50" class="passed">with no argument</dt>
+    <script type="text/javascript">moveProgressBar('75.8');</script>
+    <dd class="example passed"><span class="passed_spec_name">should default to Ruby as the name</span><span class='duration'>0.00000s</span></dd>
+  </dl>
+</div>
+<div id="div_group_51" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_51" class="passed">predicate methods and predicate matchers</dt>
+    <script type="text/javascript">moveProgressBar('76.9');</script>
+    <dd class="example passed"><span class="passed_spec_name">can be tested with Ruby methods</span><span class='duration'>0.00000s</span></dd>
+    <script type="text/javascript">moveProgressBar('78.0');</script>
+    <dd class="example passed"><span class="passed_spec_name">can be tested with predicate matchers</span><span class='duration'>0.00000s</span></dd>
+  </dl>
+</div>
+<div id="div_group_52" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_52" class="passed">0</dt>
+    <script type="text/javascript">moveProgressBar('79.1');</script>
+    <dd class="example passed"><span class="passed_spec_name">should be zero</span><span class='duration'>0.00000s</span></dd>
+  </dl>
+</div>
+<div id="div_group_53" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_53" class="passed">raise_error matcher</dt>
+    <script type="text/javascript">moveProgressBar('80.2');</script>
+    <dd class="example passed"><span class="passed_spec_name">can check for a specific error being raised</span><span class='duration'>0.00100s</span></dd>
+    <script type="text/javascript">moveProgressBar('81.3');</script>
+    <dd class="example passed"><span class="passed_spec_name">can check for a user_created error</span><span class='duration'>0.00000s</span></dd>
+    <script type="text/javascript">moveProgressBar('82.4');</script>
+    <dd class="example passed"><span class="passed_spec_name">best uses no error message in not_to</span><span class='duration'>0.00000s</span></dd>
+  </dl>
+</div>
+<div id="div_group_54" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_54" class="passed">HotChocolate</dt>
+    <script type="text/javascript">moveProgressBar('83.5');</script>
+    <dd class="example passed"><span class="passed_spec_name">confirms that an object can respond to a method</span><span class='duration'>0.00000s</span></dd>
+    <script type="text/javascript">moveProgressBar('84.6');</script>
+    <dd class="example passed"><span class="passed_spec_name">should respond to #purchase with 1 argument</span><span class='duration'>0.00100s</span></dd>
+  </dl>
+</div>
+<div id="div_group_55" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_55" class="passed">satisfy matcher</dt>
+    <script type="text/javascript">moveProgressBar('85.7');</script>
+    <dd class="example passed"><span class="passed_spec_name">is a palindrome</span><span class='duration'>0.00300s</span></dd>
+    <script type="text/javascript">moveProgressBar('86.8');</script>
+    <dd class="example passed"><span class="passed_spec_name">can accept a custom error message</span><span class='duration'>0.00000s</span></dd>
+  </dl>
+</div>
+<div id="div_group_56" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_56" class="passed">first example group</dt>
+    <script type="text/javascript">moveProgressBar('87.9');</script>
+    <dd class="example passed"><span class="passed_spec_name">can use outside instance variables</span><span class='duration'>0.00000s</span></dd>
+    <script type="text/javascript">moveProgressBar('89.0');</script>
+    <dd class="example passed"><span class="passed_spec_name">can reuse instance variable across different examples</span><span class='duration'>0.00000s</span></dd>
+  </dl>
+</div>
+<div id="div_group_57" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_57" class="passed">Array</dt>
+    <script type="text/javascript">moveProgressBar('90.1');</script>
+    <dd class="example passed"><span class="passed_spec_name">return the number of items</span><span class='duration'>0.00000s</span></dd>
+  </dl>
+</div>
+<div id="div_group_58" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_58" class="passed">String</dt>
+    <script type="text/javascript">moveProgressBar('91.2');</script>
+    <dd class="example passed"><span class="passed_spec_name">return the number of items</span><span class='duration'>0.00000s</span></dd>
+  </dl>
+</div>
+<div id="div_group_59" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_59" class="passed">Hash</dt>
+    <script type="text/javascript">moveProgressBar('92.3');</script>
+    <dd class="example passed"><span class="passed_spec_name">return the number of items</span><span class='duration'>0.00100s</span></dd>
+  </dl>
+</div>
+<div id="div_group_60" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_60" class="passed">SLink</dt>
+    <script type="text/javascript">moveProgressBar('93.4');</script>
+    <dd class="example passed"><span class="passed_spec_name">return the number of items</span><span class='duration'>0.00000s</span></dd>
+  </dl>
+</div>
+<div id="div_group_61" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_61" class="passed">start_with and end_with matchers</dt>
+  </dl>
+</div>
+<div id="div_group_62" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_62" class="passed">caterpillar</dt>
+    <script type="text/javascript">moveProgressBar('94.5');</script>
+    <dd class="example passed"><span class="passed_spec_name">should check for substring at the beginning or end</span><span class='duration'>0.00000s</span></dd>
+    <script type="text/javascript">moveProgressBar('95.6');</script>
+    <dd class="example passed"><span class="passed_spec_name">should start with &quot;cat&quot;</span><span class='duration'>0.00000s</span></dd>
+    <script type="text/javascript">moveProgressBar('96.7');</script>
+    <dd class="example passed"><span class="passed_spec_name">should end with &quot;pillar&quot;</span><span class='duration'>0.00000s</span></dd>
+  </dl>
+</div>
+<div id="div_group_63" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_63" class="passed">[:a, :b, :c, :d]</dt>
+    <script type="text/javascript">moveProgressBar('97.8');</script>
+    <dd class="example passed"><span class="passed_spec_name">should check for elements at the beginning or end of the array</span><span class='duration'>0.00000s</span></dd>
+    <script type="text/javascript">moveProgressBar('98.9');</script>
+    <dd class="example passed"><span class="passed_spec_name">should start with :a and :b</span><span class='duration'>0.00000s</span></dd>
+    <script type="text/javascript">moveProgressBar('100.0');</script>
+    <dd class="example passed"><span class="passed_spec_name">should end with :c and :d</span><span class='duration'>0.00000s</span></dd>
+  </dl>
+</div>
+<script type="text/javascript">document.getElementById('duration').innerHTML = "Finished in <strong>4.19937 seconds</strong>";</script>
+<script type="text/javascript">document.getElementById('totals').innerHTML = "91 examples, 2 failures";</script>
+</div>
+</div>
+</body>
+</html>
